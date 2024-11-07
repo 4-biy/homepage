@@ -7,11 +7,64 @@
     <meta charset="UTF-8" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        function changePage(page) {
-            document.open();
-            document.write(page);
-            document.close();
+        // Koordinat pusat lokasi (misalnya, kantor atau titik absensi)
+        const centerLatitude = -5.108351;  // Ganti dengan latitude pusat
+        const centerLongitude = 119.432420; // Ganti dengan longitude pusat
+        const radiusInMeters = 10; // Radius dalam meter, misalnya 100 meter
+
+        // Fungsi untuk menghitung jarak menggunakan rumus Haversine
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371000; // Radius bumi dalam meter
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // Jarak dalam meter
+            return distance;
         }
+
+        // Fungsi untuk mengambil lokasi dan memeriksa apakah dalam radius
+        function checkLocationAndRedirect() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const userLatitude = position.coords.latitude;
+                    const userLongitude = position.coords.longitude;
+
+                    // Hitung jarak antara pengguna dan titik pusat
+                    const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
+
+                    // Cek apakah jarak lebih besar dari radius yang ditentukan
+                    if (distance > radiusInMeters) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Anda berada di luar radius!',
+                            text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
+                        });
+                    } else {
+                        // Jika di dalam radius, arahkan ke halaman absensi
+                        window.location.href = "https://4-biy.github.io/absensi-siswa-mahasiswa/";
+                    }
+                }, function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal mengambil lokasi',
+                        text: error.message,
+                    });
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Geolocation tidak didukung',
+                    text: 'Perangkat Anda tidak mendukung geolocation.',
+                });
+            }
+        }
+        
     </script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -24,18 +77,21 @@
             <div class="mx-auto min-h-screen overflow-hidden">
                 <div class="w-full max-xl:px-8 bg-indigo-300">
                     <div class="max-w-screen-xl flex justify-center items-center gap-12 max-md:gap-6 mx-auto">
-                        
+
                         <img class="h-32 w-32 max-md:w-16 max-md:h-16 max-sm:my-8" src="Logoooo.png" alt="" />
-                       
+
                         <div class="text-center">
                             <small
-                                class="xl:text-2xl md:text-base font-semibold inline-block pt-8 max-xl:pt-8 sm:block max-sm:hidden">PT Industri Kapal Indonesia (Persero)</small>
-                            <h1 class="xl:text-4xl md:text-lg w-fit text-balance xl:leading-1 0 pt-2 max-xl:pt-0 pb-8 font-bold sm:block max-sm:hidden">
+                                class="xl:text-2xl md:text-base font-semibold inline-block pt-8 max-xl:pt-8 sm:block max-sm:hidden">PT
+                                Industri Kapal Indonesia (Persero)</small>
+                            <h1
+                                class="xl:text-4xl md:text-lg w-fit text-balance xl:leading-1 0 pt-2 max-xl:pt-0 pb-8 font-bold sm:block max-sm:hidden">
                                 Catatan Elektronik Mahasiswa Magang dan PKL Aktif dengan Keandalan Analisis
                             </h1>
                         </div>
-                    <img class="h-32 w-32 max-md:w-16 max-md:h-16 max-sm:my-8"
-                        src="https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg" alt="" />
+                        <img class="h-32 w-32 max-md:w-16 max-md:h-16 max-sm:my-8"
+                            src="https://upload.wikimedia.org/wikipedia/commons/6/67/Coat_of_arms_of_South_Sulawesi.svg"
+                            alt="" />
                     </div>
                 </div>
                 <div
@@ -51,7 +107,7 @@
                     </h3>
                     <ul class="flex flex-wrap justify-center items-center border-purple-400 gap-8">
                         <li>
-                            <button onclick="location.href='https://4-biy.github.io/absensi-siswa-mahasiswa/'"
+                            <button onclick="checkLocationAndRedirect()"
                                 class="flex flex-col duration-200 rounded-xl overflow-hidden justify-center items-center font-semibold gap-8 bg-indigo-300 hover:bg-indigo-200 hover:text-indigo-950 transition-all hover:scale-105 shadow-sm p-8 hover:border-2 hover:border-indigo-950"
                                 type="button">
                                 <p class="text-3xl text-center w-fit capitalize">Absensi</p>
