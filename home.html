@@ -41,18 +41,22 @@
                             text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
                         });
                     } else {
-                        const absensiUrl = "https://4-biy.github.io/absensi-siswa-mahasiswa/";
+                        const absensiUrl = "https://4-biy.github.io/homepage/home.html";
 
                         // Deteksi apakah perangkat Android atau iOS
                         const isAndroid = /Android/i.test(navigator.userAgent);
                         const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
                         if (isAndroid) {
+                            // Coba buka Chrome di Android menggunakan intent URL
                             window.location.href = `intent:${absensiUrl}#Intent;package=com.android.chrome;scheme=https;end`;
                         } else if (isIOS) {
-                            window.location.href = `googlechrome://navigate?url=${absensiUrl}`;
+                            // Coba buka Chrome di iOS
+                            setTimeout(() => {
+                                window.location.href = `googlechrome://navigate?url=${absensiUrl}`;
+                            }, 100); // Delay 100ms untuk memberikan waktu memeriksa Chrome
                         } else {
-                            window.location.href = absensiUrl;  // Jika tidak terdeteksi, buka di browser default
+                            window.location.href = absensiUrl; // Buka di browser default jika bukan Android atau iOS
                         }
                     }
                 },
