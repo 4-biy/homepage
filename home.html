@@ -7,12 +7,14 @@
     <meta charset="UTF-8" />
     <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    const centerLatitude = -5.10819;
-    const centerLongitude = 119.43231;
-    const radiusInMeters = 23.25;
+    // Koordinat pusat lokasi (misalnya, kantor atau titik absensi)
+        const centerLatitude = -5.10819;
+        const centerLongitude = 119.43231;
+        const radiusInMeters = 23.25;
 
+    // Fungsi untuk menghitung jarak menggunakan rumus Haversine
     function calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371000;
+        const R = 6371000; // Radius bumi dalam meter
         const φ1 = lat1 * Math.PI / 180;
         const φ2 = lat2 * Math.PI / 180;
         const Δφ = (lat2 - lat1) * Math.PI / 180;
@@ -22,53 +24,38 @@
             Math.cos(φ1) * Math.cos(φ2) *
             Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
+        const distance = R * c; // Jarak dalam meter
+        return distance;
     }
 
+    // Fungsi untuk mengambil lokasi dan memeriksa apakah dalam radius
     function checkLocationAndRedirect() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    const userLatitude = position.coords.latitude;
-                    const userLongitude = position.coords.longitude;
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const userLatitude = position.coords.latitude;
+                const userLongitude = position.coords.longitude;
 
-                    const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
+                // Hitung jarak antara pengguna dan titik pusat
+                const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
 
-                    if (distance > radiusInMeters) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Anda berada di luar radius!',
-                            text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
-                        });
-                    } else {
-                        const absensiUrl = "4-biy.github.io/iframe/iframe.html";
-
-                        // Deteksi apakah perangkat Android atau iOS
-                        const isAndroid = /Android/i.test(navigator.userAgent);
-                        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-                        if (isAndroid) {
-                            // Coba buka Chrome di Android menggunakan intent URL
-                            window.location.href = `intent:${absensiUrl}#Intent;package=com.android.chrome;scheme=https://;end`;
-                        } else if (isIOS) {
-                            // Coba buka Chrome di iOS
-                            setTimeout(() => {
-                                window.location.href = `googlechrome://navigate?url=${absensiUrl}`;
-                            }, 100); // Delay 100ms untuk memberikan waktu memeriksa Chrome
-                        } else {
-                            window.location.href = absensiUrl; // Buka di browser default jika bukan Android atau iOS
-                        }
-                    }
-                },
-                function (error) {
+                // Cek apakah jarak lebih besar dari radius yang ditentukan
+                if (distance > radiusInMeters) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Gagal mengambil lokasi',
-                        text: error.message,
+                        title: 'Anda berada di luar radius!',
+                        text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
                     });
-                },
-                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-            );
+                } else {
+                    // Jika di dalam radius, arahkan ke halaman absensi
+                    window.location.href = "https://4-biy.github.io/iframe/iframe.html";
+                }
+            }, function (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal mengambil lokasi',
+                    text: error.message,
+                });
+            });
         } else {
             Swal.fire({
                 icon: 'error',
@@ -77,6 +64,7 @@
             });
         }
     }
+
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -99,7 +87,7 @@
                                 Industri Kapal Indonesia (Persero)</small>
                             <h1
                                 class="xl:text-4xl md:text-lg w-fit text-balance xl:leading-1 0 pt-2 max-xl:pt-0 pb-8 font-bold sm:block max-sm:hidden">
-                                Catatan Elektronik Mahasiswa Magang dan PKL Aktif dengan Keandalan Analisis
+                                Catatan Elektronik Mahasiswa Magang dan PKL Aktif dengan Keandalan Analisis
                             </h1>
                         </div>
                         <img class="h-32 w-32 max-md:w-16 max-md:h-16 max-sm:my-8"
