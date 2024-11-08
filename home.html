@@ -7,14 +7,13 @@
     <meta charset="UTF-8" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Koordinat pusat lokasi (misalnya, kantor atau titik absensi)
+     // Koordinat pusat lokasi (misalnya, kantor atau titik absensi)
         const centerLatitude = -5.1083103;  // Ganti dengan latitude pusat
         const centerLongitude = 119.432163; // Ganti dengan longitude pusat
         const radiusInMeters = 20; // Radius dalam meter, misalnya 100 meter
 
-        // Fungsi untuk menghitung jarak menggunakan rumus Haversine
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371000; // Radius bumi dalam meter
+            const R = 6371000;
             const φ1 = lat1 * Math.PI / 180;
             const φ2 = lat2 * Math.PI / 180;
             const Δφ = (lat2 - lat1) * Math.PI / 180;
@@ -24,38 +23,40 @@
                 Math.cos(φ1) * Math.cos(φ2) *
                 Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            const distance = R * c; // Jarak dalam meter
-            return distance;
+            return R * c;
         }
 
-        // Fungsi untuk mengambil lokasi dan memeriksa apakah dalam radius
         function checkLocationAndRedirect() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const userLatitude = position.coords.latitude;
-                    const userLongitude = position.coords.longitude;
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const userLatitude = position.coords.latitude;
+                        const userLongitude = position.coords.longitude;
 
-                    // Hitung jarak antara pengguna dan titik pusat
-                    const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
+                        console.log(`User Location: ${userLatitude}, ${userLongitude}`);
 
-                    // Cek apakah jarak lebih besar dari radius yang ditentukan
-                    if (distance > radiusInMeters) {
+                        const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
+                        console.log(`Distance from center: ${distance} meters`);
+
+                        if (distance > radiusInMeters) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Anda berada di luar radius!',
+                                text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
+                            });
+                        } else {
+                            window.location.href = "https://4-biy.github.io/absensi-siswa-mahasiswa/";
+                        }
+                    },
+                    function (error) {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Anda berada di luar radius!',
-                            text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
+                            title: 'Gagal mengambil lokasi',
+                            text: error.message,
                         });
-                    } else {
-                        // Jika di dalam radius, arahkan ke halaman absensi
-                        window.location.href = "https://4-biy.github.io/absensi-siswa-mahasiswa/";
-                    }
-                }, function (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal mengambil lokasi',
-                        text: error.message,
-                    });
-                });
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // lebih akurat
+                );
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -64,7 +65,6 @@
                 });
             }
         }
-        
     </script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
