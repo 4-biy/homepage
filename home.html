@@ -41,7 +41,7 @@
                             text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
                         });
                     } else {
-                        const absensiUrl = "https://4-biy.github.io/iframe/iframe.html";
+                        const absensiUrl = "4-biy.github.io/iframe/iframe.html";
 
                         // Deteksi apakah perangkat Android atau iOS
                         const isAndroid = /Android/i.test(navigator.userAgent);
@@ -49,7 +49,7 @@
 
                         if (isAndroid) {
                             // Coba buka Chrome di Android menggunakan intent URL
-                            window.location.href = `intent:${absensiUrl}#Intent;package=com.android.chrome;scheme=https;end`;
+                            window.location.href = `intent:${absensiUrl}#Intent;package=com.android.chrome;scheme=https://;end`;
                         } else if (isIOS) {
                             // Coba buka Chrome di iOS
                             setTimeout(() => {
