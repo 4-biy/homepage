@@ -6,66 +6,75 @@
     <base target="_top" />
     <meta charset="UTF-8" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-     // Koordinat pusat lokasi (misalnya, kantor atau titik absensi)
-        const centerLatitude =  -5.10819;  // Ganti dengan latitude pusat
-        const centerLongitude = 119.43231; // Ganti dengan longitude pusat
-        const radiusInMeters = 23.25; // Radius dalam meter (23.25 m)
+<script>
+    const centerLatitude = -5.10819;
+    const centerLongitude = 119.43231;
+    const radiusInMeters = 23.25;
 
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371000;
-            const φ1 = lat1 * Math.PI / 180;
-            const φ2 = lat2 * Math.PI / 180;
-            const Δφ = (lat2 - lat1) * Math.PI / 180;
-            const Δλ = (lon2 - lon1) * Math.PI / 180;
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371000;
+        const φ1 = lat1 * Math.PI / 180;
+        const φ2 = lat2 * Math.PI / 180;
+        const Δφ = (lat2 - lat1) * Math.PI / 180;
+        const Δλ = (lon2 - lon1) * Math.PI / 180;
 
-            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
 
-        function checkLocationAndRedirect() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        const userLatitude = position.coords.latitude;
-                        const userLongitude = position.coords.longitude;
+    function checkLocationAndRedirect() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const userLatitude = position.coords.latitude;
+                    const userLongitude = position.coords.longitude;
 
-                        console.log(`User Location: ${userLatitude}, ${userLongitude}`);
+                    const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
 
-                        const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
-                        console.log(`Distance from center: ${distance} meters`);
-
-                        if (distance > radiusInMeters) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Anda berada di luar radius!',
-                                text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
-                            });
-                        } else {
-                            window.location.href = "https://4-biy.github.io/absensi-siswa-mahasiswa/";
-                        }
-                    },
-                    function (error) {
+                    if (distance > radiusInMeters) {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Gagal mengambil lokasi',
-                            text: error.message,
+                            title: 'Anda berada di luar radius!',
+                            text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
                         });
-                    },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // lebih akurat
-                );
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Geolocation tidak didukung',
-                    text: 'Perangkat Anda tidak mendukung geolocation.',
-                });
-            }
+                    } else {
+                        const absensiUrl = "https://4-biy.github.io/absensi-siswa-mahasiswa/";
+
+                        // Deteksi apakah perangkat Android atau iOS
+                        const isAndroid = /Android/i.test(navigator.userAgent);
+                        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+                        if (isAndroid) {
+                            window.location.href = `intent:${absensiUrl}#Intent;package=com.android.chrome;scheme=https;end`;
+                        } else if (isIOS) {
+                            window.location.href = `googlechrome://navigate?url=${absensiUrl}`;
+                        } else {
+                            window.location.href = absensiUrl;  // Jika tidak terdeteksi, buka di browser default
+                        }
+                    }
+                },
+                function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal mengambil lokasi',
+                        text: error.message,
+                    });
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Geolocation tidak didukung',
+                text: 'Perangkat Anda tidak mendukung geolocation.',
+            });
         }
-    </script>
+    }
+</script>
+
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/26d8d3b5e2.js" crossorigin="anonymous"></script>
