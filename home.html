@@ -7,46 +7,47 @@
     <meta charset="UTF-8" />
     <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    // Koordinat pusat lokasi (misalnya, kantor atau titik absensi)
-        const centerLatitude = -5.1923774;
-        const centerLongitude = 119.4636916;
-        const radiusInMeters = 30.00;
+    // Array titik koordinat area yang diinginkan (diubah sesuai dengan area pada gambar)
+    const polygonCoords = [
+        { lat: -5.108425, lng: 119.432153 },
+        { lat: -5.108556, lng: 119.432242 },
+        { lat: -5.108386, lng: 119.432506 },
+        { lat: -5.108244, lng: 119.432414 }
+        // Tambahkan lebih banyak titik jika perlu untuk membentuk area yang tepat
+    ];
 
-    // Fungsi untuk menghitung jarak menggunakan rumus Haversine
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371000; // Radius bumi dalam meter
-        const φ1 = lat1 * Math.PI / 180;
-        const φ2 = lat2 * Math.PI / 180;
-        const Δφ = (lat2 - lat1) * Math.PI / 180;
-        const Δλ = (lon2 - lon1) * Math.PI / 180;
+    // Fungsi untuk memeriksa apakah titik berada di dalam poligon
+    function isPointInPolygon(lat, lng, polygon) {
+        let inside = false;
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            const xi = polygon[i].lat, yi = polygon[i].lng;
+            const xj = polygon[j].lat, yj = polygon[j].lng;
 
-        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const distance = R * c; // Jarak dalam meter
-        return distance;
+            const intersect = ((yi > lng) != (yj > lng)) &&
+                (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+        return inside;
     }
 
-    // Fungsi untuk mengambil lokasi dan memeriksa apakah dalam radius
+    // Fungsi untuk mengambil lokasi dan memeriksa apakah dalam area poligon
     function checkLocationAndRedirect() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 const userLatitude = position.coords.latitude;
                 const userLongitude = position.coords.longitude;
 
-                // Hitung jarak antara pengguna dan titik pusat
-                const distance = calculateDistance(userLatitude, userLongitude, centerLatitude, centerLongitude);
+                // Periksa apakah pengguna berada di dalam area poligon
+                const isInside = isPointInPolygon(userLatitude, userLongitude, polygonCoords);
 
-                // Cek apakah jarak lebih besar dari radius yang ditentukan
-                if (distance > radiusInMeters) {
+                if (!isInside) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Anda berada di luar radius!',
+                        title: 'Anda berada di luar area yang ditentukan!',
                         text: 'Silakan kembali ke lokasi yang benar untuk melakukan absensi.',
                     });
                 } else {
-                    // Jika di dalam radius, arahkan ke halaman absensi
+                    // Jika di dalam area, arahkan ke halaman absensi
                     window.location.href = "https://4-biy.github.io/iframe/iframe.html";
                 }
             }, function (error) {
@@ -64,7 +65,6 @@
             });
         }
     }
-
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
