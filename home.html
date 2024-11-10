@@ -11,6 +11,75 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
+        <!-- Geolocation and Redirect Script -->
+    <script>
+        // Koordinat area poligon
+        const polygonCoords = [
+            { lat: -5.108244, lng: 119.432153 },
+            { lat: -5.108519, lng: 119.432225 },
+            { lat: -5.108300, lng: 119.432578 },
+            { lat: -5.108014, lng: 119.432403 }
+        ];
+
+        // Fungsi untuk memeriksa apakah titik berada di dalam poligon
+        function isPointInPolygon(lat, lng, polygon) {
+            let inside = false;
+            for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+                const xi = polygon[i].lat, yi = polygon[i].lng;
+                const xj = polygon[j].lat, yj = polygon[j].lng;
+
+                const intersect = ((yi > lng) != (yj > lng)) &&
+                    (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
+                if (intersect) inside = !inside;
+            }
+            return inside;
+        }
+
+        // Fungsi untuk memeriksa lokasi dan mengarahkan
+        function checkLocationAndRedirect() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    const userLatitude = position.coords.latitude;
+                    const userLongitude = position.coords.longitude;
+                    const isInside = isPointInPolygon(userLatitude, userLongitude, polygonCoords);
+
+                    if (!isInside) {
+                        Swal.fire({
+                            icon: 'error',
+                            iconColor: '#e74c3c',
+                            title: 'PERHATIAN',
+                            html: 'Anda berada di luar area yang ditentukan! Silakan kembali ke lokasi yang benar.<a href="warning.html" style="color:#e74c3c; text-decoration: none; font-size:13px;">Klik di sini untuk informasi lebih lanjut</a>',
+                            confirmButtonText: 'Mengerti',
+                            confirmButtonColor: '#e74c3c'
+                        });
+                    } else {
+                        window.location.href = "absensi.html";
+                    }
+
+                }, function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal mengambil lokasi',
+                        text: error.message,
+                    });
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Geolocation tidak didukung',
+                    text: 'Perangkat Anda tidak mendukung geolocation.',
+                });
+            }
+        }
+
+        // Fungsi untuk menampilkan menu Sertifikat dan menyembunyikan menu Aplikasi
+        function showSertifikatMenu() {
+            document.getElementById("menuAplikasi").classList.add("hidden");
+            document.getElementById("menuSertifikat").classList.remove("hidden");
+        }
+
+    </script>
+    
 <body class="bg-slate-100">
     <div class="flex flex-col items-center min-h-screen mx-auto">
         <!-- Header Section -->
@@ -93,75 +162,6 @@
         </div>
 
     </div>
-
-    <!-- Geolocation and Redirect Script -->
-    <script>
-        // Koordinat area poligon
-        const polygonCoords = [
-            { lat: -5.108244, lng: 119.432153 },
-            { lat: -5.108519, lng: 119.432225 },
-            { lat: -5.108300, lng: 119.432578 },
-            { lat: -5.108014, lng: 119.432403 }
-        ];
-
-        // Fungsi untuk memeriksa apakah titik berada di dalam poligon
-        function isPointInPolygon(lat, lng, polygon) {
-            let inside = false;
-            for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-                const xi = polygon[i].lat, yi = polygon[i].lng;
-                const xj = polygon[j].lat, yj = polygon[j].lng;
-
-                const intersect = ((yi > lng) != (yj > lng)) &&
-                    (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
-                if (intersect) inside = !inside;
-            }
-            return inside;
-        }
-
-        // Fungsi untuk memeriksa lokasi dan mengarahkan
-        function checkLocationAndRedirect() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    const userLatitude = position.coords.latitude;
-                    const userLongitude = position.coords.longitude;
-                    const isInside = isPointInPolygon(userLatitude, userLongitude, polygonCoords);
-
-                    if (!isInside) {
-                        Swal.fire({
-                            icon: 'error',
-                            iconColor: '#e74c3c',
-                            title: 'PERHATIAN',
-                            html: 'Anda berada di luar area yang ditentukan! Silakan kembali ke lokasi yang benar.<a href="warning.html" style="color:#e74c3c; text-decoration: none; font-size:13px;">Klik di sini untuk informasi lebih lanjut</a>',
-                            confirmButtonText: 'Mengerti',
-                            confirmButtonColor: '#e74c3c'
-                        });
-                    } else {
-                        window.location.href = "absensi.html";
-                    }
-
-                }, function (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal mengambil lokasi',
-                        text: error.message,
-                    });
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Geolocation tidak didukung',
-                    text: 'Perangkat Anda tidak mendukung geolocation.',
-                });
-            }
-        }
-
-        // Fungsi untuk menampilkan menu Sertifikat dan menyembunyikan menu Aplikasi
-        function showSertifikatMenu() {
-            document.getElementById("menuAplikasi").classList.add("hidden");
-            document.getElementById("menuSertifikat").classList.remove("hidden");
-        }
-
-    </script>
 </body>
 
 </html>
