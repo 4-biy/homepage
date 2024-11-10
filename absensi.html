@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ABSENSI MAHASISWA & SISWA</title>
+    <style>
+        #gform {
+            margin: auto;
+            border: blue solid 1px;
+            width: 100%;
+            height: 98vh;
+            overflow: auto;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body style="background-color: #eee">
+    <!-- Container untuk membuat iframe responsif -->
+    <iframe id="gform"
+        src="https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true"
+        style="width: 100%; border: none;"></iframe>
+    <script type="text/javascript">
+        var loadCount = 0;
+        // Sesuaikan id gform dengan id iframe di atas
+        document.getElementById('gform').onload = function () {
+            loadCount++;
+            if (loadCount > 1) {
+                // Ganti URL di bawah dengan URL WebApp Anda
+                document.location = "https://script.google.com/macros/s/AKfycbzHyULnBqXJcf8WmrVIL0hU7A2wIPttSPJYgYut5a0anZt2ZKFzPC6x6NqWr9LqfNFWug/exec";
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+                    // Cek apakah izin akses absensi telah diberikan
+                    const canAccess = sessionStorage.getItem("canAccessAbsensi");
+
+                    if (canAccess !== "true") {
+                        // Jika tidak diizinkan, redirect kembali ke index.html
+                        window.location.href = "home.html";
+                    } else {
+                        // Menghapus status setelah akses agar tidak bisa langsung akses ulang
+                        sessionStorage.removeItem("canAccessAbsensi");
+                    }
+                });
+    </script>
+</body>
+
+</html>
