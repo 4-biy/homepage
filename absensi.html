@@ -50,19 +50,6 @@
             document.location = "https://script.google.com/macros/s/AKfycbzHyULnBqXJcf8WmrVIL0hU7A2wIPttSPJYgYut5a0anZt2ZKFzPC6x6NqWr9LqfNFWug/exec";
         }
     };
-
-    document.addEventListener("DOMContentLoaded", () => {
-        // Cek apakah izin akses absensi telah diberikan
-        const canAccess = sessionStorage.getItem("canAccessAbsensi");
-
-        if (canAccess !== "true") {
-            // Jika tidak diizinkan, redirect kembali ke index.html atau halaman utama
-            window.location.href = "home.html";
-        } else {
-            // Menghapus status setelah akses agar tidak bisa langsung akses ulang
-            sessionStorage.removeItem("canAccessAbsensi");
-        }
-    });
 </script>
 
 </body>
