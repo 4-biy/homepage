@@ -40,30 +40,31 @@
     <iframe id="gform"
         src="https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true"
         style="width: 100%; border: none;"></iframe>
-    <script type="text/javascript">
-        var loadCount = 0;
-        // Sesuaikan id gform dengan id iframe di atas
-        document.getElementById('gform').onload = function () {
-            loadCount++;
-            if (loadCount > 1) {
-                // Ganti URL di bawah dengan URL WebApp Anda
-                document.location = "https://script.google.com/macros/s/AKfycbzHyULnBqXJcf8WmrVIL0hU7A2wIPttSPJYgYut5a0anZt2ZKFzPC6x6NqWr9LqfNFWug/exec";
-            }
-        };
+  <script type="text/javascript">
+    var loadCount = 0;
+    // Sesuaikan id gform dengan id iframe di atas
+    document.getElementById('gform').onload = function () {
+        loadCount++;
+        if (loadCount > 1) {
+            // Ganti URL di bawah dengan URL WebApp Anda
+            document.location = "https://script.google.com/macros/s/AKfycbzHyULnBqXJcf8WmrVIL0hU7A2wIPttSPJYgYut5a0anZt2ZKFzPC6x6NqWr9LqfNFWug/exec";
+        }
+    };
 
-        document.addEventListener("DOMContentLoaded", () => {
-                    // Cek apakah izin akses absensi telah diberikan
-                    const canAccess = sessionStorage.getItem("canAccessAbsensi");
+    document.addEventListener("DOMContentLoaded", () => {
+        // Cek apakah izin akses absensi telah diberikan
+        const canAccess = sessionStorage.getItem("canAccessAbsensi");
 
-                    if (canAccess !== "true") {
-                        // Jika tidak diizinkan, redirect kembali ke index.html
-                        window.location.href = "home.html";
-                    } else {
-                        // Menghapus status setelah akses agar tidak bisa langsung akses ulang
-                        sessionStorage.removeItem("canAccessAbsensi");
-                    }
-                });
-    </script>
+        if (canAccess !== "true") {
+            // Jika tidak diizinkan, redirect kembali ke index.html atau halaman utama
+            window.location.href = "home.html";
+        } else {
+            // Menghapus status setelah akses agar tidak bisa langsung akses ulang
+            sessionStorage.removeItem("canAccessAbsensi");
+        }
+    });
+</script>
+
 </body>
 
 </html>
