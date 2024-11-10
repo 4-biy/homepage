@@ -119,13 +119,13 @@
         }
 
         // Fungsi untuk memeriksa lokasi dan mengarahkan
-         function checkLocationAndRedirect() {
+        function checkLocationAndRedirect() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     const userLatitude = position.coords.latitude;
                     const userLongitude = position.coords.longitude;
                     const isInside = isPointInPolygon(userLatitude, userLongitude, polygonCoords);
-        
+
                     if (!isInside) {
                         Swal.fire({
                             icon: 'error',
@@ -136,11 +136,9 @@
                             confirmButtonColor: '#e74c3c'
                         });
                     } else {
-                        // Set status absensi diklik
-                        sessionStorage.setItem('absensiClicked', 'true');
                         window.location.href = "absensi.html";
                     }
-        
+
                 }, function (error) {
                     Swal.fire({
                         icon: 'error',
@@ -157,13 +155,16 @@
             }
         }
 
-
         // Fungsi untuk menampilkan menu Sertifikat dan menyembunyikan menu Aplikasi
         function showSertifikatMenu() {
             document.getElementById("menuAplikasi").classList.add("hidden");
             document.getElementById("menuSertifikat").classList.remove("hidden");
         }
 
+        function allowAccessToAbsensi() {
+            canAccessAbsensi = true;
+            window.location.href = "absensi.html"; // Arahkan ke absensi.html
+        }
     </script>
 </body>
 
