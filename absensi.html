@@ -37,30 +37,23 @@
 
 <body style="background-color: #eee">
     <!-- Container untuk membuat iframe responsif -->
-    <iframe id="gform"
-        src="https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true"
-        style="width: 100%; border: none;">
-    </iframe>
-       <script>
-        // Ambil token dari parameter URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-
-        // Periksa apakah token ada dan sesuai
-        if (token !== '2342dsfa2342df') { // Ganti dengan token yang sama di index.html
-            // Tampilkan pesan peringatan dan arahkan kembali ke halaman utama
+    <iframe id="gform" style="width: 100%; border: none;"></iframe>
+    <script>
+        if (sessionStorage.getItem("locationVerified") !== "true") {
             Swal.fire({
-                icon: 'error',
-                title: 'Akses Tidak Sah',
-                text: 'Anda harus mengakses halaman ini melalui tombol Absensi di halaman utama.',
-                confirmButtonColor: '#e74c3c',
+                icon: 'warning',
+                title: 'Akses Ditolak',
+                text: 'Anda harus berada dalam area yang ditentukan untuk mengakses halaman ini.',
                 confirmButtonText: 'Kembali'
             }).then(() => {
-                // Redirect ke halaman utama
                 window.location.href = "index.html";
             });
+        } else {
+            // Menambahkan src setelah halaman dimuat
+            document.getElementById('gform').src = "https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true";
         }
     </script>
 </body>
+
 
 </html>
