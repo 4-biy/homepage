@@ -35,22 +35,30 @@
     </style>
 </head>
 
-<body style="background-color: #eee">
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation tidak didukung oleh browser ini.");
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById("latitude").value = position.coords.latitude;
+            document.getElementById("longitude").value = position.coords.longitude;
+            document.getElementById("gform").submit();  // Submit form otomatis
+        }
+    </script>
+
+<body style="background-color: #eee" onload="getLocation()">
     <!-- Container untuk membuat iframe responsif -->
     <iframe id="gform"
         src="https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true"
-        style="width: 100%; border: none;"></iframe>
-  <script type="text/javascript">
-    var loadCount = 0;
-    // Sesuaikan id gform dengan id iframe di atas
-    document.getElementById('gform').onload = function () {
-        loadCount++;
-        if (loadCount > 1) {
-            // Ganti URL di bawah dengan URL WebApp Anda
-         document.location = "https://script.google.com/macros/s/AKfycbxcoYGiuVc2GQgu-AxmQjHm9rXksbISmVrkwzf-H4bdA2ly9HYcWJR8rejedZfKRDNEGg/exec";
-        }
-    };
-</script>
+        style="width: 100%; border: none;">
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+        </iframe>
 
 </body>
 
