@@ -39,17 +39,27 @@
     <!-- Container untuk membuat iframe responsif -->
     <iframe id="gform"
         src="https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true"
-        style="width: 100%; border: none;"></iframe>
-    <script type="text/javascript">
-        var loadCount = 0;
-        // Sesuaikan id gform dengan id iframe di atas
-        document.getElementById('gform').onload = function () {
-            loadCount++;
-            if (loadCount > 1) {
-                // Ganti URL di bawah dengan URL WebApp Anda
-                document.location = "https://script.google.com/macros/s/AKfycbzvQRamTRrJEM65asGq8klofP1tJOd718w63otgfTcw8EEs_UNnIQ8-0qQgxF1TqmTbvg/exec";
-            }
-        };
+        style="width: 100%; border: none;">
+    </iframe>
+       <script>
+        // Ambil token dari parameter URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        // Periksa apakah token ada dan sesuai
+        if (token !== '2342dsfa2342df') { // Ganti dengan token yang sama di index.html
+            // Tampilkan pesan peringatan dan arahkan kembali ke halaman utama
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Tidak Sah',
+                text: 'Anda harus mengakses halaman ini melalui tombol Absensi di halaman utama.',
+                confirmButtonColor: '#e74c3c',
+                confirmButtonText: 'Kembali'
+            }).then(() => {
+                // Redirect ke halaman utama
+                window.location.href = "index.html";
+            });
+        }
     </script>
 </body>
 
