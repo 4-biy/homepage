@@ -125,6 +125,8 @@
                     const userLatitude = position.coords.latitude;
                     const userLongitude = position.coords.longitude;
                     const isInside = isPointInPolygon(userLatitude, userLongitude, polygonCoords);
+                    const secureToken = '2342dsfa2342df'; // Ganti dengan token yang aman
+                    
 
                     if (!isInside) {
                         Swal.fire({
@@ -136,7 +138,7 @@
                             confirmButtonColor: '#e74c3c'
                         });
                         } else {
-                        window.location.href = "absensi.html";
+                        window.location.href = `absensi.html?token=${secureToken}`;
                     }
 
 
