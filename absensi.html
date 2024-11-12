@@ -38,7 +38,8 @@
 <body style="background-color: #eee">
     <!-- Container untuk membuat iframe responsif -->
     <iframe id="gform" style="width: 100%; border: none;"></iframe>
-    <script>
+  <script>
+        // Cek apakah locationVerified true
         if (sessionStorage.getItem("locationVerified") !== "true") {
             Swal.fire({
                 icon: 'warning',
@@ -49,8 +50,24 @@
                 window.location.href = "index.html";
             });
         } else {
-            // Menambahkan src setelah halaman dimuat
-            document.getElementById('gform').src = "https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true";
+            // Mengatur src iframe setelah halaman dimuat
+            var iframe = document.getElementById('gform');
+            iframe.src = "https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true";
+            
+            // Deteksi jika iframe gagal dimuat
+            iframe.onload = function() {
+                console.log('Iframe berhasil dimuat');
+            };
+
+            // Fungsi untuk menangani error jika iframe gagal dimuat
+            function handleError() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Not Found',
+                    text: 'Halaman tidak dapat dimuat. Coba lagi nanti.',
+                    confirmButtonText: 'Tutup'
+                });
+            }
         }
     </script>
 </body>
