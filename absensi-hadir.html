@@ -6,40 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>ABSENSI MAHASISWA & SISWA</title>
-    <style>
-        #gform {
-            margin: auto;
-            border: blue solid 1px;
-            width: 100%;
-            height: 100vh;
-            overflow: auto;
-        }
-
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-
-        .header {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .header img {
-            width: 100%;
-            max-width: 600px;
-            height: auto;
-        }
-    </style>
 </head>
 
-<body style="background-color: #eee">
+<body class="bg-gray-200 h-screen flex flex-col items-center justify-center">
     <!-- Container untuk membuat iframe responsif -->
-    <iframe id="gform" style="width: 100%; border: none;"></iframe>
-  <script>
+    <iframe id="gform" class="w-full h-full" style="min-height: 100vh;"></iframe>
+
+    <script>
         // Cek apakah locationVerified true
         if (sessionStorage.getItem("locationVerified") !== "true") {
             Swal.fire({
@@ -72,6 +47,5 @@
         }
     </script>
 </body>
-
 
 </html>
