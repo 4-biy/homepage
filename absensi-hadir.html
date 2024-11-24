@@ -5,14 +5,17 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="Logoooo.png" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <title>ABSENSI MAHASISWA & SISWA</title>
 </head>
 
-<body class="bg-gray-200 h-screen flex flex-col items-center justify-center">
-    <!-- Container untuk membuat iframe responsif -->
-    <iframe id="gform" class="w-full h-full" style="min-height: 100vh;"></iframe>
+<body class="bg-gray-200 flex justify-center items-center h-screen">
+    <!-- Container untuk iframe -->
+    <div class="w-full max-w-full bg-white">
+        <iframe id="gform" class="w-full" style="height: 100vh;" scrolling="no"></iframe>
+    </div>
 
     <script>
         // Cek apakah locationVerified true
@@ -29,21 +32,21 @@
             // Mengatur src iframe setelah halaman dimuat
             var iframe = document.getElementById('gform');
             iframe.src = "https://script.google.com/macros/s/AKfycbxSPctyIeBud2Z5ACg-R60c3Vq49jkbmDtS6wB_QAt0NLpHuGqDgrkhoCAmF1bfwVPW-Q/exec";
-            
-            // Deteksi jika iframe gagal dimuat
-            iframe.onload = function() {
-                console.log('Iframe berhasil dimuat');
+
+            // Sesuaikan tinggi iframe secara otomatis
+            iframe.onload = function () {
+                iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
             };
 
-            // Fungsi untuk menangani error jika iframe gagal dimuat
-            function handleError() {
+            // Tangani error jika iframe gagal dimuat
+            iframe.onerror = function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Not Found',
                     text: 'Halaman tidak dapat dimuat. Coba lagi nanti.',
                     confirmButtonText: 'Tutup'
                 });
-            }
+            };
         }
     </script>
 </body>
