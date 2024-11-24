@@ -53,7 +53,7 @@
         } else {
             // Mengatur src iframe setelah halaman dimuat
             var iframe = document.getElementById('gform');
-            iframe.src = "https://docs.google.com/forms/d/e/1FAIpQLSeI9BB5WHCtQS-_4CsYjqjojoe8sBxQ1z_Dg4sLCCmWnNjjBQ/viewform?embedded=true";
+            iframe.src = "window.open('https://script.google.com/macros/s/AKfycbxM99zUUiRZtRiq1wCXSXGfcbqhRWJQdGI_c8iL5WHG2tzNymx0vFnJg6NbwxVX73zKIg/exec')";
             
             // Deteksi jika iframe gagal dimuat
             iframe.onload = function() {
